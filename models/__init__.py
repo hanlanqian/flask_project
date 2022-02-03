@@ -1,0 +1,2 @@
+from .resourceModel import Resource
+

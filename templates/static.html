@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+{% set files_path = "/files"%}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>静态资源</title>
+    <link rel="stylesheet" href="/static/stylesheets/statics.css">
+    <script src="/static/js/statics.js"></script>
+</head>
+
+<body>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <p class="button"><input type="file" id="upload" name="upload"></p>
+        <p class="submit"><input type="submit"></p>
+    </form>
+    <table>
+        <tr>
+            <td>资源名称</td>
+            <td>资源大小</td>
+            <td>创建时间</td>
+            <td>更新时间</td>
+        </tr>
+        {% for name, size, c_time, u_time in files %}
+        <tr>
+            <td><a href="{{files_path}}/{{name}}" download="">{{name}}</a></td>
+            <td>{{size}}</td>
+            <td>{{c_time}}</td>
+            <td>{{u_time}}</a></td>
+        </tr>
+        <td><a href="/statics/{{i}}" download="">{{i}}</a></td>
+        {% endfor %}
+        <!-- <tr>
+            <td><a href="/files/Kyle Xian - リテラチュア（魔女之旅 OP）.mp3" download="">Kyle Xian - リテラチュア（魔女之旅 OP）.mp3</a></td>
+            <td><a href="/stylesheets/statics.css">test</a></td>
+        </tr> -->
+        
+    </table>
+
+</body>
+
+</html>
