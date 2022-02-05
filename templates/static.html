@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>静态资源</title>
-    <link rel="stylesheet" href="/static/stylesheets/statics.css">
-    <script src="/static/js/statics.js"></script>
+    <link rel="stylesheet" href="/static/stylesheet/static.css">
+    <script src="/static/js/static.js"></script>
 </head>
 
 <body>
@@ -17,6 +17,7 @@
     </form>
     <table>
         <tr>
+            
             <td>资源名称</td>
             <td>资源大小(kb)</td>
             <td>创建时间</td>
@@ -27,7 +28,7 @@
             <td><a href="{{files_path}}/{{name}}" download="">{{name}}</a></td>
             <td>{{size}}</td>
             <td>{{c_time}}</td>
-            <td>{{u_time}}</a></td>
+            <td>{{u_time}}</td>
         </tr>
         <td><a href="/statics/{{i}}" download="">{{i}}</a></td>
         {% endfor %}

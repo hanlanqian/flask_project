@@ -3,7 +3,6 @@ from turtle import up
 from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for
 from config import files_path
 from models import Resource
-import os
 
 resource = Blueprint('resource', __name__)
 
@@ -43,7 +42,10 @@ def upload_file():
 
 @resource.route('/delete', methods=['POST'])
 def delete_file():
-    
+    form = request.forms
+    print(form)
+    Resource.delete(form.get())
+    return 0
 
 
 @resource.route('/test')
