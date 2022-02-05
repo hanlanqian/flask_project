@@ -1,5 +1,4 @@
-from config import Base
-from sqlalchemy import Column, Integer, String, Float, Date
+from sqlalchemy import Integer, String, Float
 from db_session import db
 from flask import Response, abort
 from utils import UnitBase
@@ -22,6 +21,7 @@ class Resource(UnitBase):
     @classmethod
     def get_or_none(cls, file_name):
         m = cls.query.filter_by(file_name=file_name).all()
+        print(m)
         if not m:
             return None
         else:
@@ -36,8 +36,19 @@ class Resource(UnitBase):
             db.session.add(file)
             db.session.commit()
         else:
-            file = cls.query.filter_by(file_name=file_name)
-            file.update({'file_size': data.get('file_size', 0)})
-            file = file.all()
+            file[0].update(data)
         return file
-            
+    
+    @classmethod
+    def delete(cls, key):
+        if isinstance(key, int):
+            cls.query.filter(Resource.id==key).delete()
+            db.session.commit()
+        elif isinstance(key, str):
+            cls.query.filter(Resource.file_name==key).delete()
+            db.session.commit()
+        else:
+            return abort(Response("wrong type for delete key"))
+        return 'yes'
+
+
