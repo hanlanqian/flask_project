@@ -11,11 +11,25 @@ class UnitBase(db.Model):
     create_time = db.Column(db.DateTime, default=datetime.datetime.now, nullable=False)
     update_time = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now, nullable=False)
 
+    @classmethod
+    def insert(cls, data:dict):
+        pop_key = []
+        for key, value in data.items():
+            if not hasattr(cls, key):
+                pop_key.append(key)
+        [data.pop(i) for i in pop_key]
+        file = cls(**data)
+        db.session.add(file)
+        db.session.commit()
+        return file
+
 
     def update(self, data:dict):
+        pop_key = []
         for key, value in data.items():
             if not hasattr(self, key):
-                abort(Response(f"表格{self.__tablename__}没有{key}属性"))
+                pop_key.append(key)
+        [data.pop(i) for i in pop_key]
         data.update({'update_time': datetime.datetime.now()})
         self.query.filter(getattr(self.__class__, 'id')==getattr(self, 'id')).update(data)
         db.session.commit()
@@ -24,5 +38,4 @@ class UnitBase(db.Model):
     def to_dict(self):
         data = self.__dict__
         data.pop('_sa_instance_state')
-        print(data)
-        return 0
+        return data

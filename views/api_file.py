@@ -1,8 +1,8 @@
-from crypt import methods
-from turtle import up
-from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for
+from flask import Blueprint, render_template, send_from_directory, request, redirect, url_for, jsonify
 from config import files_path
 from models import Resource
+import json
+import os
 
 resource = Blueprint('resource', __name__)
 
@@ -27,26 +27,31 @@ def download_file(filename):
     return send_from_directory(files_path, filename)
 
 
-@resource.route('/upload', methods=["POST"])
+@resource.route('/file/upload', methods=["POST"])
 def upload_file():
-    upload = request.files['upload']
-    upload.seek(0, 2)
-    size = upload.tell()/1024
-    if upload:
-        upload.seek(0, 0)        
-        upload.save(f'./files/{upload.filename}')
-        file = Resource.upsert({'file_name': upload.filename, 'file_size': size})
+    form = request.form
+    file_data = request.files
+    for _, data in file_data.items():
+        if os.path.exists(f"{files_path}/{data.filename}"):
+            os.remove(f"{files_path}/{data.filename}")
+        data.save(f"{files_path}/{data.filename}")
+    for _, file_info_str in form.items():
+        file_info = json.loads(file_info_str)
+        Resource.upsert(file_info)
+    return jsonify(code=200, msg="upload successfully!!")
 
-
-    return redirect(url_for('resource.hello'))
-
-@resource.route('/delete', methods=['POST'])
+@resource.route('/file/delete', methods=['POST']) 
 def delete_file():
-    form = request.forms
-    print(form)
-    Resource.delete(form.get())
-    return 0
+    files = request.json
+    for file_name in files:
+        Resource.delete(file_name)
+    return jsonify(code=200, msg="delete successfully!!")
 
+
+@resource.route('/file/get')
+def get_files():
+    ms = Resource.get_all()
+    return jsonify(data=ms, code=200, msg='get data successfully!!')
 
 @resource.route('/test')
 def test():
