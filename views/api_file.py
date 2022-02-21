@@ -27,7 +27,7 @@ def download_file(filename):
     return send_from_directory(files_path, filename)
 
 
-@resource.route('/file/upload', methods=["POST"])
+@resource.route('/api/file/upload', methods=["POST"])
 def upload_file():
     form = request.form
     file_data = request.files
@@ -35,12 +35,10 @@ def upload_file():
         if os.path.exists(f"{files_path}/{data.filename}"):
             os.remove(f"{files_path}/{data.filename}")
         data.save(f"{files_path}/{data.filename}")
-    for _, file_info_str in form.items():
-        file_info = json.loads(file_info_str)
-        Resource.upsert(file_info)
+    Resource.upsert(form.to_dict())
     return jsonify(code=200, msg="upload successfully!!")
 
-@resource.route('/file/delete', methods=['POST']) 
+@resource.route('/api/file/delete', methods=['POST']) 
 def delete_file():
     files = request.json
     for file_name in files:
@@ -48,7 +46,7 @@ def delete_file():
     return jsonify(code=200, msg="delete successfully!!")
 
 
-@resource.route('/file/get')
+@resource.route('/api/file/get')
 def get_files():
     ms = Resource.get_all()
     return jsonify(data=ms, code=200, msg='get data successfully!!')

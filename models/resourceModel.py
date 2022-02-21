@@ -1,5 +1,4 @@
-from turtle import clear
-from sqlalchemy import Integer, String, Float, true
+from sqlalchemy import Integer, String, Float
 from db_session import db
 from flask import Response, abort
 from utils import UnitBase
@@ -67,7 +66,8 @@ class Resource(UnitBase):
             db.session.commit()
         else:
             return abort(Response("wrong type for delete key"))
-        os.remove(f"{files_path}/{key}")
+        if os.path.exists(f"{files_path}/{key}"):
+            os.remove(f"{files_path}/{key}")
         return 'successfully delete'
 
 

@@ -18,10 +18,10 @@ class UnitBase(db.Model):
             if not hasattr(cls, key):
                 pop_key.append(key)
         [data.pop(i) for i in pop_key]
-        file = cls(**data)
-        db.session.add(file)
+        m = cls(**data)
+        db.session.add(m)
         db.session.commit()
-        return file
+        return m
 
 
     def update(self, data:dict):
